@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('work_lists', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('type');
+            $table->text('description')->nullable();
+            $table->foreignId('department_id')
+                  ->constrained()
+                  ->onDelete('cascade');
+            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
+            $table->timestamp('due_date')->nullable();
             $table->timestamps();
         });
     }

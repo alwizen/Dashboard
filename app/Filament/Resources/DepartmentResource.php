@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DriverAmtResource\Pages;
-use App\Filament\Resources\DriverAmtResource\RelationManagers;
-use App\Models\DriverAmt;
+use App\Filament\Resources\DepartmentResource\Pages;
+use App\Filament\Resources\DepartmentResource\RelationManagers;
+use App\Models\Department;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,35 +12,31 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
-class DriverAmtResource extends Resource
+class DepartmentResource extends Resource
 {
+    protected static ?string $model = Department::class;
 
-    protected static ?string $model = DriverAmt::class;
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
-    protected static ?string $navigationLabel = 'Awak Mobil Tangki';
-
-    protected static ?string $navigationGroup = 'Fleet Management';
-
-    protected static ?string $navigationIcon = '';
-
+    protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nip')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('position')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('note')
-                    ->maxLength(255)
-                    ->default(null),
+                ->required()
+                ->maxLength(255)
+                ->reactive() // agar bisa mendeteksi perubahan input secara langsung
+                ->afterStateUpdated(function (callable $set, $state) {
+                    $set('slug', Str::slug($state)); // isi slug berdasarkan name
+                }),
+    
+            Forms\Components\TextInput::make('slug')
+                ->required()
+                ->maxLength(255),
             ]);
     }
 
@@ -48,15 +44,9 @@ class DriverAmtResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('#')
-                ->rowIndex(),
-                Tables\Columns\TextColumn::make('nip')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('position')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('note')
+                Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -76,16 +66,16 @@ class DriverAmtResource extends Resource
 
             ])
             ->bulkActions([
-                // Tables\Actions\BulkActionGroup::make([
-                //     Tables\Actions\DeleteBulkAction::make(),
-                // ]),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageDriverAmts::route('/'),
+            'index' => Pages\ManageDepartments::route('/'),
         ];
     }
 }
