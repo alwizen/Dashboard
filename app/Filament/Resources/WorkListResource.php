@@ -27,13 +27,13 @@ class WorkListResource extends Resource
     protected static ?string $navigationLabel = 'Program Kerja';
 
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            Section::make('Informasi Program Kerja')
-                ->description('Isi detail program kerja yang akan dikelola.')
-                ->schema([
-                    Card::make([
+    {
+        return $form
+            ->schema([
+                Section::make('Informasi Program Kerja')
+                    ->description('Isi detail program kerja yang akan dikelola.')
+                    ->schema([
+
                         Forms\Components\TextInput::make('title')
                             ->label('Judul')
                             ->required()
@@ -48,30 +48,32 @@ class WorkListResource extends Resource
                                 'feature' => 'Feature',
                             ])
                             ->required(),
+                    ])
+                    ->columns(2),
 
-                        Forms\Components\Textarea::make('description')
-                            ->label('Deskripsi')
-                            ->columnSpanFull(),
-                    ]),
-                ])
-                ->columns(1),
-                Card::make('Department')
-                ->schema([
-                    Forms\Components\Select::make('department_id')
+                Section::make('Department')
+                    ->schema([
+                        Forms\Components\Select::make('department_id')
                             ->label('Departemen')
                             ->relationship('department', 'name')
                             ->required(),
 
-                    Forms\Components\TextInput::make('progress')
+                        Forms\Components\TextInput::make('progress')
                             ->label('Progres (%)')
                             ->numeric()
                             ->suffix('%')
                             ->default(0)
                             ->minValue(0)
                             ->maxValue(100)
-                            ->required(),
+                            ->required()
+                            // Disable progress field saat edit (karena akan diupdate via relation manager)
+                            ->disabled(fn (string $operation): bool => $operation === 'edit')
+                            ->dehydrated() // Pastikan value tetap disimpan meski disabled
+                            ->helperText(fn (string $operation): ?string =>
+                            $operation === 'edit' ? 'Progress diupdate melalui History. Tambah history baru untuk mengubah progress.' : null
+                            ),
 
-                            Forms\Components\Select::make('status')
+                        Forms\Components\Select::make('status')
                             ->label('Status')
                             ->options([
                                 'pending' => 'Pending',
@@ -80,79 +82,84 @@ class WorkListResource extends Resource
                             ])
                             ->disabled() // atau ->readOnly()
                             ->default('pending'),
-                        
 
                         Forms\Components\DatePicker::make('due_date')
                             ->label('Batas Waktu'),
-                ])->columns(4),
-        ]);
-}
+                        Forms\Components\RichEditor::make('description')
+                            ->label('Catatan')
+                            ->disableToolbarButtons([
+                                'attachFiles',
+                            ])
+                            ->columnSpanFull(),
+                    ])->columns(4),
+            ]);
+    }
 
-public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('title')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('type')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('department.name')
-                ->numeric()
-                ->sortable(),
-            Tables\Columns\TextColumn::make('status')
-            ->badge()
-            ->color(fn ($state): string => match ($state) {
-                'pending' => 'danger',
-                'in_progress' => 'warning',
-                'completed' => 'success',
-                default => 'danger',
-            }),
-            
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+//                ->description(fn (WorkList $record): string => $record->description),
+                Tables\Columns\TextColumn::make('type')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('department.name')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn($state): string => match ($state) {
+                        'pending' => 'danger',
+                        'in_progress' => 'warning',
+                        'completed' => 'success',
+                        default => 'danger',
+                    }),
 
-            // Masih tetap tampilkan kolom angka progres untuk filter/sort
-            Tables\Columns\TextColumn::make('progress')
-                ->numeric()
-                ->suffix('%')
-                ->sortable(),
+                // Masih tetap tampilkan kolom angka progres untuk filter/sort
+                Tables\Columns\TextColumn::make('progress')
+                    ->numeric()
+                    ->suffix('%')
+                    ->sortable(),
 
-            Tables\Columns\TextColumn::make('due_date')
-                ->date()
-                ->sortable(),
+                Tables\Columns\TextColumn::make('due_date')
+                    ->date()
+                    ->sortable(),
 
-            // Tambahan: progress dalam bentuk bar
-            ProgressBar::make('progress_bar')
-                ->getStateUsing(fn ($record) => [
-                    'total' => 100,
-                    'progress' => $record->progress, // asumsinya sudah persentase
+                // Tambahan: progress dalam bentuk bar
+                ProgressBar::make('progress_bar')
+                    ->getStateUsing(fn($record) => [
+                        'total' => 100,
+                        'progress' => $record->progress, // asumsinya sudah persentase
+                    ]),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            Tables\Columns\TextColumn::make('created_at')
-                ->dateTime()
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make('updated_at')
-                ->dateTime()
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
-        ])
-        ->filters([
-            //
-        ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
-        ])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
-}
-
+            ]);
+    }
 
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\HistoriesRelationManager::class,
         ];
     }
 

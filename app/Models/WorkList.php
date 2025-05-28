@@ -3,34 +3,59 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes; // jika menggunakan soft delete
 
 class WorkList extends Model
 {
+    // use SoftDeletes; // uncomment jika menggunakan soft delete
+
     protected $fillable = [
         'title',
         'type',
-        'description',
         'department_id',
-        'status',
         'progress',
+        'status',
         'due_date',
+        'description',
     ];
 
-    public function department()
+    protected $casts = [
+        'due_date' => 'date',
+        'progress' => 'integer',
+    ];
+
+    /**
+     * Relationship ke Department
+     */
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }
-    protected static function booted()
+
+    /**
+     * Relationship ke WorkListHistory
+     */
+    public function histories(): HasMany
     {
-        static::saving(function ($workList) {
-            if ($workList->progress === 0) {
-                $workList->status = 'pending';
-            } elseif ($workList->progress < 100) {
-                $workList->status = 'in_progress';
-            } else {
-                $workList->status = 'completed';
-            }
-        });
+        return $this->hasMany(WorkListHistory::class);
     }
 
+    /**
+     * Get progress terbaru dari history
+     */
+    public function getLatestProgressAttribute(): int
+    {
+        $latestHistory = $this->histories()->latest()->first();
+        return $latestHistory ? $latestHistory->progress : $this->progress;
+    }
+
+    /**
+     * Get history terbaru
+     */
+    public function getLatestHistoryAttribute(): ?WorkListHistory
+    {
+        return $this->histories()->latest()->first();
+    }
 }
