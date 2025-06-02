@@ -45,16 +45,16 @@ class HistoriesRelationManager extends RelationManager
                     ->suffix('%')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('note')
-                    ->label('Catatan')
-                    ->limit(50)
-                    ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
-                        $state = $column->getState();
-                        if (strlen($state) <= 50) {
-                            return null;
-                        }
-                        return $state;
-                    }),
+                /* Tables\Columns\TextColumn::make('note') */
+                /*     ->label('Catatan') */
+                /*     ->limit(50) */
+                /*     ->tooltip(function (Tables\Columns\TextColumn $column): ?string { */
+                /*         $state = $column->getState(); */
+                /*         if (strlen($state) <= 50) { */
+                /*             return null; */
+                /*         } */
+                /*         return $state; */
+                /*     }), */
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal')

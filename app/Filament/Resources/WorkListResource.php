@@ -67,10 +67,11 @@ class WorkListResource extends Resource
                             ->maxValue(100)
                             ->required()
                             // Disable progress field saat edit (karena akan diupdate via relation manager)
-                            ->disabled(fn (string $operation): bool => $operation === 'edit')
+                            ->disabled(fn(string $operation): bool => $operation === 'edit')
                             ->dehydrated() // Pastikan value tetap disimpan meski disabled
-                            ->helperText(fn (string $operation): ?string =>
-                            $operation === 'edit' ? 'Progress diupdate melalui History. Tambah history baru untuk mengubah progress.' : null
+                            ->helperText(
+                                fn(string $operation): ?string =>
+                                $operation === 'edit' ? 'Progress diupdate melalui History. Tambah history baru untuk mengubah progress.' : null
                             ),
 
                         Forms\Components\Select::make('status')
@@ -101,7 +102,7 @@ class WorkListResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-//                ->description(fn (WorkList $record): string => $record->description),
+                //                ->description(fn (WorkList $record): string => $record->description),
                 Tables\Columns\TextColumn::make('type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('department.name')
@@ -130,7 +131,7 @@ class WorkListResource extends Resource
                 ProgressBar::make('progress_bar')
                     ->getStateUsing(fn($record) => [
                         'total' => 100,
-                        'progress' => $record->progress, // asumsinya sudah persentase
+                        'progress' => $record->progress,
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
