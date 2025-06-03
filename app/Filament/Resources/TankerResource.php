@@ -19,6 +19,18 @@ class TankerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    // protected static ?string $navigationGroup = 'Master Data';
+
+    protected static ?string $label = 'Mobil Tangki';
+
+    protected static ?int $navigationSort = 2;
+    
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nopol', 'capacity', 'status', 'note'];
+    }
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -35,9 +47,13 @@ class TankerResource extends Resource
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('kir_expiry'),
                 Forms\Components\DatePicker::make('kim_expiry'),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('status')
                     ->required()
-                    ->maxLength(255)
+                    ->options([
+                        'available' => 'Available',
+                        'under_maintenance' => 'Under Maintenance',
+                        'afkir' => 'AFKIR',
+                    ])
                     ->default('available'),
                 Forms\Components\TextInput::make('note')
                     ->maxLength(255)

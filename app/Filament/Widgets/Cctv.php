@@ -19,6 +19,9 @@ class Cctv extends BaseWidget
 
     protected static ?string $pollingInterval = '10s';
 
+    protected static ?int $sort = 2;
+
+
     // public static string? 
     protected function getStats(): array
     {
@@ -26,21 +29,24 @@ class Cctv extends BaseWidget
 
         $report = DailyCctvReport::whereDate('report_date', $today)->latest()->first();
         return [
-            Stat::make('Total CCTV Hari Ini', ($report?->cctv_count ?? 0) . ' CCTV')
+            Stat::make('Total CCTV FT Tegal', ($report?->cctv_count ?? 0) . ' CCTV')
                 ->description("Tanggal: {$today->format('d-m-Y')}")
                 ->icon('heroicon-o-video-camera'),
+        
             Stat::make('CCTV Aktif Hari Ini', ($report?->active_cctv_count ?? 0) . ' CCTV')
                 ->icon('heroicon-o-check-circle')
                 ->description("Tanggal: {$today->format('d-m-Y')}")
                 ->color('success'),
+        
             Stat::make('CCTV Tidak Aktif Hari Ini', ($report?->inactive_cctv_count ?? 0) . ' CCTV')
                 ->icon('heroicon-o-x-circle')
                 ->description("Tanggal: {$today->format('d-m-Y')}")
                 ->color('danger'),
-            Stat::make('CCTV Tidak Aktif Hari Ini', ($report?->inactive_cctv_count ?? 0) . ' CCTV')
-                ->icon('heroicon-o-x-circle')
-                ->description("Tanggal: {$today->format('d-m-Y')}")
-                ->color('danger'),
-        ];
+        
+            Stat::make('Catatan Hari Ini', '')
+                ->icon('heroicon-o-document-text')
+                ->description($report?->report_details ?? 'Tidak ada catatan.')
+                ->color('gray'),
+        ];        
     }
 }

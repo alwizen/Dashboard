@@ -25,8 +25,8 @@ class Tanker extends Model
     {
         return match ($this->status) {
             'available' => 'Available',
-            'in_use' => 'In Use',
             'under_maintenance' => 'Under Maintenance',
+            'afkir' => 'AFKIR',
             default => 'Unknown',
         };
     }

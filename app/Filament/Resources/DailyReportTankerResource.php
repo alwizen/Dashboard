@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DailyCctvReportResource\Pages;
-use App\Filament\Resources\DailyCctvReportResource\RelationManagers;
-use App\Models\Cctv;
-use App\Models\DailyCctvReport;
+use App\Filament\Resources\DailyReportTankerResource\Pages;
+use App\Filament\Resources\DailyReportTankerResource\RelationManagers;
+use App\Models\DailyReportTanker;
+use App\Models\Tanker;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,18 +14,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DailyCctvReportResource extends Resource
+class DailyReportTankerResource extends Resource
 {
-    protected static ?string $model = DailyCctvReport::class;
-
-    protected static ?string $navigationIcon = '';
+    protected static ?string $model = DailyReportTanker::class;
 
     protected static ?string $navigationGroup = 'Laporan Harian';
 
-    protected static ?string $label = 'Laporan CCTV Harian';
+    protected static ?string $label = 'Laporan Harian Mobil Tangki';
 
-    protected static ?string $pluralLabel = 'Laporan CCTV Harian';
-    protected static ?string $navigationLabel = 'Laporan CCTV Harian';
+    protected static ?string $pluralLabel = 'Harian Mobil Tangki';
+
+    protected static ?string $navigationIcon = '';
 
     public static function form(Form $form): Form
     {
@@ -34,20 +33,23 @@ class DailyCctvReportResource extends Resource
                 Forms\Components\DatePicker::make('report_date')
                     ->required()
                     ->default(now()),
-                Forms\Components\TextInput::make('cctv_count')
-                ->default(fn () => Cctv::count())
-                ->suffix('CCTVs')
+                Forms\Components\TextInput::make('count_tankers')
+                    ->required()
+                    ->default(fn() => Tanker::count())
+                    ->numeric(),
+                Forms\Components\TextInput::make('count_tanker_under_maintenance')
+                    ->required()
+                    ->default(fn() => Tanker::where('status', 'under_maintenance')->count()) // 'under_maintenance' status
+                    ->numeric(),
+                Forms\Components\TextInput::make('count_tanker_afkir')
+                    ->required()
+                    ->default(fn() => Tanker::where('status', 'afkir')->count()) // 'afkir' status
+                    ->numeric(),
+                Forms\Components\TextInput::make('count_tanker_available')
+                    ->default(fn() => Tanker::where('status', 'available')->count()) // 'available' status
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('active_cctv_count')
-                    ->required()
-                    ->default(fn () => Cctv::where('status', 0)->count()) //0 adalah aktif
-                    ->numeric(),
-                Forms\Components\TextInput::make('inactive_cctv_count')
-                    ->required()
-                    ->default(fn () => Cctv::where('status', 1)->count()) //1 adalah tidak aktif
-                    ->numeric(),
-                Forms\Components\Textarea::make('report_details')
+                Forms\Components\Textarea::make('note')
                     ->columnSpanFull(),
             ]);
     }
@@ -57,27 +59,20 @@ class DailyCctvReportResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('report_date')
-                    ->label('Tanggal Laporan')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('cctv_count')
+                Tables\Columns\TextColumn::make('count_tankers')
                     ->numeric()
-                    ->label('Jumlah CCTV')
-                    ->suffix(' CCTV')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('active_cctv_count')
+                Tables\Columns\TextColumn::make('count_tanker_under_maintenance')
                     ->numeric()
-                    ->label('Jumlah CCTV Aktif')
-                    ->suffix(' CCTV')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('inactive_cctv_count')
+                Tables\Columns\TextColumn::make('count_tanker_afkir')
                     ->numeric()
-                    ->label('Jumlah CCTV Tidak Aktif')
-                    ->suffix(' CCTV')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('report_details')
-                    ->label('Detail Laporan')
-                    ->wrap(),
+                Tables\Columns\TextColumn::make('count_tanker_available')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -92,7 +87,7 @@ class DailyCctvReportResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-   Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make(),
 
             ])
             ->bulkActions([
@@ -112,9 +107,9 @@ class DailyCctvReportResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDailyCctvReports::route('/'),
-            'create' => Pages\CreateDailyCctvReport::route('/create'),
-            'edit' => Pages\EditDailyCctvReport::route('/{record}/edit'),
+            'index' => Pages\ListDailyReportTankers::route('/'),
+            'create' => Pages\CreateDailyReportTanker::route('/create'),
+            'edit' => Pages\EditDailyReportTanker::route('/{record}/edit'),
         ];
     }
 }
