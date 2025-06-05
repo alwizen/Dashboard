@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\WorkListResource\Pages;
 use App\Filament\Resources\WorkListResource\RelationManagers;
+use App\Filament\Resources\WorkListResource\RelationManagers\HistoriesRelationManager;
 use App\Models\WorkList;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
@@ -11,8 +12,9 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilaProgress\Tables\Columns\CircleProgress;
+use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
 use IbrahimBougaoua\FilaProgress\Tables\Columns\ProgressBar;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -146,9 +148,17 @@ class WorkListResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                RelationManagerAction::make('histories')
+                    ->label('Riwayat Pekerjaan')
+                    ->relationManager(HistoriesRelationManager::make())
+                    ->icon('heroicon-o-paper-clip')
+                    ->color('gray')
+                    ->tooltip('Lihat riwayat progress'),
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -160,7 +170,7 @@ class WorkListResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\HistoriesRelationManager::class,
+            // RelationManagers\HistoriesRelationManager::class,
         ];
     }
 

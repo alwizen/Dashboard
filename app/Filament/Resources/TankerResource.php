@@ -11,24 +11,33 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TankerResource extends Resource
 {
     protected static ?string $model = Tanker::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
-    // protected static ?string $navigationGroup = 'Master Data';
+     protected static ?string $navigationGroup = 'Fleet Management';
 
     protected static ?string $label = 'Mobil Tangki';
 
     protected static ?int $navigationSort = 2;
-    
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['nopol', 'capacity', 'status', 'note'];
     }
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'nopol' => $record->nopol,
+            'capacity' => $record->capacity,
+        ];
+    }
+
 
 
     public static function form(Form $form): Form

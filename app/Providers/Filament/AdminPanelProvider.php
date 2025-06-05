@@ -64,8 +64,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogoHeight('5rem')
             ->darkModeBrandLogo(asset('images/dark.png'))
             ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(Login::class))
-            ->when($this->settings->registration_enabled ?? true, fn($panel) => $panel->registration())
-            ->when($this->settings->password_reset_enabled ?? true, fn($panel) => $panel->passwordReset())
+            // ->when($this->settings->registration_enabled ?? true, fn($panel) => $panel->registration())
+            // ->when($this->settings->password_reset_enabled ?? true, fn($panel) => $panel->passwordReset())
             // ->emailVerification()
             ->colors([
                 'primary' => Color::Amber,
@@ -78,7 +78,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Cctv::class,
-                // Widgets\AccountWidget::class,
                 WeatherToday::class,
 
                 // Widgets\FilamentInfoWidget::class,

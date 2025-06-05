@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\MpsWorkingListCategoryResource\Pages;
-use App\Filament\Resources\MpsWorkingListCategoryResource\RelationManagers;
-use App\Models\MpsWorkingListCategory;
+use App\Filament\Resources\ProductResource\Pages;
+use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class MpsWorkingListCategoryResource extends Resource
+class ProductResource extends Resource
 {
-    protected static ?string $model = MpsWorkingListCategory::class;
+    protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,16 +26,14 @@ class MpsWorkingListCategoryResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->maxLength(255)
                     ->reactive()
-                    ->afterStateUpdated(fn (callable $set, $state) =>
-                    $set('slug', Str::slug($state))
-                    )
-                    ->maxLength(255),
+                    ->debounce(500)
+                    ->afterStateUpdated(fn(callable $set, $state) => $set('slug', Str::slug($state))
+                    ),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
             ]);
     }
 
@@ -62,6 +60,8 @@ class MpsWorkingListCategoryResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -73,7 +73,7 @@ class MpsWorkingListCategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageMpsWorkingListCategories::route('/'),
+            'index' => Pages\ManageProducts::route('/'),
         ];
     }
 }

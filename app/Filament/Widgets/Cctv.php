@@ -19,7 +19,7 @@ class Cctv extends BaseWidget
 
     protected static ?string $pollingInterval = '10s';
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
 
 
     // public static string? 

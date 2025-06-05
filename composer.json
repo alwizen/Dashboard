@@ -19,6 +19,7 @@
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "filament/spatie-laravel-settings-plugin": "^3.2",
+        "guava/filament-modal-relation-managers": "^1.4",
         "hasnayeen/themes": "*",
         "ibrahim-bougaoua/filaprogress": "dev-main",
         "jeffgreco13/filament-breezy": "^2.4",

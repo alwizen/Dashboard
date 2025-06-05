@@ -12,9 +12,11 @@ class WeatherToday extends Widget
 
     protected static ?string $heading = 'Cuaca Hari Ini';
 
-    protected int | string | array $columnSpan = 'full';
+    // protected int | string | array $columnSpan = 'full';
 
     protected static ?string $pollingInterval = '300s';
+
+//    protected int | string | array $columnSpan = 1;
 
     protected static ?int $sort = 0;
 
@@ -28,5 +30,11 @@ class WeatherToday extends Widget
     public function loadWeatherData(): void
     {
         $this->data = (new OpenWeatherService())->getWeather(-6.869723, 109.186403);
+
+        if (!$this->data) {
+            $this->data = [
+                'error' => 'Gagal memuat data cuaca. Silakan coba lagi nanti.',
+            ];
+        }
     }
 }

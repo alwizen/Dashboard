@@ -144,12 +144,12 @@ class HistoriesRelationManager extends RelationManager
                     ->modalSubmitActionLabel('Ya, Hapus'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->requiresConfirmation()
-                        ->modalHeading('Hapus History Terpilih')
-                        ->modalDescription('History yang dipilih akan dihapus, namun progress utama tidak akan berubah.'),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make()
+                //         ->requiresConfirmation()
+                //         ->modalHeading('Hapus History Terpilih')
+                //         ->modalDescription('History yang dipilih akan dihapus, namun progress utama tidak akan berubah.'),
+                // ]),
             ])
             ->emptyStateHeading('Belum ada history progress')
             ->emptyStateDescription('Tambah history baru untuk memperbarui progress program kerja.')

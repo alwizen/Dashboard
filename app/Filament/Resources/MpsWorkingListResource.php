@@ -31,6 +31,7 @@ class MpsWorkingListResource extends Resource
                 Forms\Components\TextInput::make('progres')
                     ->required()
                     ->numeric()
+                    ->suffix('%')
                     ->helperText(
                         fn(string $operation): ?string =>
                         $operation === 'edit' ? 'Progress diupdate melalui History. Tambah history baru untuk mengubah progress.' : null

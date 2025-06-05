@@ -9,7 +9,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TankerToday extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 4;
 
     protected ?string $heading = 'Mobil Tangki Overview';
 
