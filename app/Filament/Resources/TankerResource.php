@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -42,53 +43,78 @@ class TankerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nopol')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('product')
-                    ->required()
-                    ->default('multi')
-                    ->maxLength(255),
-                Forms\Components\Select::make('transportir_id')
-                    ->relationship('transportir', 'name'),
-                Forms\Components\TextInput::make('merk'),
-                Forms\Components\Select::make('comp')
-                    ->options([
-                        '1' => '1',
-                        '2' => '2',
-                        '3' => '3',
-                    ]),
-                Forms\Components\Select::make('capacity')
-                    ->required()
-                    ->suffix(' Kl')
-                    ->options([
-                        '5' => '5',
-                        '8' => '8',
-                        '16' => '16',
-                        '24' => '24',
-                        '32' => '32'
-                    ]),
-                Forms\Components\DatePicker::make('kir_expiry'),
-                Forms\Components\DatePicker::make('kim_expiry'),
-                Forms\Components\Select::make('status')
-                    ->required()
-                    ->options([
-                        'available' => 'Available',
-                        'under_maintenance' => 'Under Maintenance',
-                        'afkir' => 'AFKIR',
+                Forms\Components\Section::make('Informasi Utama')
+                    ->schema([
+                        Forms\Components\TextInput::make('nopol')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('product')
+                            ->required()
+                            ->default('multi')
+                            ->maxLength(255),
+                        Forms\Components\Select::make('transportir_id')
+                            ->relationship('transportir', 'name')
+                            ->searchable(),
+                        Forms\Components\TextInput::make('merk'),
                     ])
-                    ->default('available'),
-                Forms\Components\TextInput::make('note')
-                    ->maxLength(255)
-                    ->default(null),
+                    ->columns(2),
+
+                Forms\Components\Section::make('Spesifikasi Tangki')
+                    ->schema([
+                        Forms\Components\Select::make('comp')
+                            ->options([
+                                '1' => '1',
+                                '2' => '2',
+                                '3' => '3',
+                            ]),
+                        Forms\Components\Select::make('capacity')
+                            ->required()
+                            ->suffix(' Kl')
+                            ->options([
+                                '5' => '5',
+                                '8' => '8',
+                                '16' => '16',
+                                '24' => '24',
+                                '32' => '32'
+                            ]),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Dokumen Kendaraan')
+                    ->schema([
+                        Forms\Components\DatePicker::make('kir_expiry'),
+                        Forms\Components\DatePicker::make('kim_expiry'),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Status dan Catatan')
+                    ->schema([
+                        Forms\Components\Select::make('status')
+                            ->required()
+                            ->options([
+                                'available' => 'Available',
+                                'under_maintenance' => 'Under Maintenance',
+                                'afkir' => 'AFKIR',
+                            ])
+                            ->default('available'),
+                        Forms\Components\TextInput::make('note')
+                            ->maxLength(255)
+                            ->default(null),
+                    ])
+                    ->columns(2),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultPaginationPageOption(50)
             ->columns([
                 Tables\Columns\TextColumn::make('nopol')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('transportir.name')
+                    ->label('Transportir')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('product')
                     ->searchable(),
@@ -135,9 +161,11 @@ class TankerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

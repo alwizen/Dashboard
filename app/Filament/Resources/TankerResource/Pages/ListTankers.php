@@ -72,7 +72,7 @@ class ListTankers extends ListRecords
                     ->title('🚨 KIR Sudah Berakhir')
                     ->body("Mobil tangki berikut KIR-nya sudah berakhir:\n\n{$kirExpiredText}")
                     ->danger()
-                    ->seconds(15)
+                    ->seconds(3)
                     ->actions([
                         Action::make('Edit')
                             ->button()
@@ -88,7 +88,7 @@ class ListTankers extends ListRecords
                 Notification::make()
                     ->title('⚠️ KIR  Berakhir')
                     ->body("Mobil tangki berikut KIR-nya  berakhir:\n\n{$kirWarningText}")
-                    ->seconds(15)
+                    ->seconds(3)
                     ->warning()
                     ->actions([
                         Action::make('Edit')
@@ -135,7 +135,7 @@ class ListTankers extends ListRecords
                 Notification::make()
                     ->title('🚨 KIM Sudah Berakhir')
                     ->body("Mobil tangki berikut KIM-nya sudah berakhir:\n\n{$kimExpiredText}")
-                    ->seconds(15)
+                    ->seconds(3)
                     ->danger()
                     ->actions([
                         Action::make('Edit')
@@ -152,7 +152,7 @@ class ListTankers extends ListRecords
                 Notification::make()
                     ->title('⚠️ KIM  Berakhir')
                     ->body("Mobil tangki berikut KIM-nya  berakhir:\n\n{$kimWarningText}")
-                    ->seconds(15)
+                    ->seconds(3)
                     ->warning()
                     ->actions([
                         Action::make('Edit')

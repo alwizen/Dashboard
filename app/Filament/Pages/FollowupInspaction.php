@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Notifications\Notification;
+use Filament\Tables\Actions\ActionGroup;
 
 class FollowupInspaction extends Page implements HasTable
 {
@@ -140,53 +141,47 @@ class FollowupInspaction extends Page implements HasTable
                     }),
             ])
             ->actions([
-                // Tables\Actions\Action::make('view_inspection')
-                //     ->label('Lihat Detail')
-                //     ->icon('heroicon-m-eye')
-                //     ->url(
-                //         fn(TankerInspection $record): string =>
-                //         route('filament.admin.resources.tanker-inspections.view', $record)
-                //     ),
+                ActionGroup::make([
+                    Tables\Actions\Action::make('new_inspection')
+                        ->label('Inspeksi Ulang')
+                        ->icon('heroicon-m-clipboard-document-check')
+                        ->color('success')
+                        ->url(
+                            fn(TankerInspection $record): string =>
+                            route('filament.admin.resources.tanker-inspections.create', [
+                                'tanker_id' => $record->tanker_id
+                            ])
+                        ),
 
-                Tables\Actions\Action::make('new_inspection')
-                    ->label('Inspeksi Ulang')
-                    ->icon('heroicon-m-clipboard-document-check')
-                    ->color('success')
-                    ->url(
-                        fn(TankerInspection $record): string =>
-                        route('filament.admin.resources.tanker-inspections.create', [
-                            'tanker_id' => $record->tanker_id
-                        ])
-                    ),
+                    Tables\Actions\EditAction::make()
+                        ->label('Edit Inspeksi')
+                        ->icon('heroicon-m-pencil-square')
+                        ->color('primary'),
 
-                Tables\Actions\EditAction::make()
-                    ->label('Edit Inspeksi')
-                    ->icon('heroicon-m-pencil-square')
-                    ->color('primary'),
+                    Tables\Actions\Action::make('set_maintenance')
+                        ->label('Set Under Maintenance')
+                        ->icon('heroicon-m-wrench-screwdriver')
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->modalHeading('Set Status Under Maintenance')
+                        ->modalDescription(
+                            fn(TankerInspection $record) =>
+                            "Apakah Anda yakin ingin mengubah status tanker {$record->tanker->nopol} menjadi Under Maintenance?"
+                        )
+                        ->action(function (TankerInspection $record) {
+                            $record->tanker->update(['status' => 'under_maintenance']);
 
-                Tables\Actions\Action::make('set_maintenance')
-                    ->label('Set Under Maintenance')
-                    ->icon('heroicon-m-wrench-screwdriver')
-                    ->color('warning')
-                    ->requiresConfirmation()
-                    ->modalHeading('Set Status Under Maintenance')
-                    ->modalDescription(
-                        fn(TankerInspection $record) =>
-                        "Apakah Anda yakin ingin mengubah status tanker {$record->tanker->nopol} menjadi Under Maintenance?"
-                    )
-                    ->action(function (TankerInspection $record) {
-                        $record->tanker->update(['status' => 'under_maintenance']);
-
-                        Notification::make()
-                            ->title('Status tanker berhasil diubah')
-                            ->body("Tanker {$record->tanker->nopol} telah diset menjadi Under Maintenance")
-                            ->success()
-                            ->send();
-                    })
-                    ->visible(
-                        fn(TankerInspection $record) =>
-                        $record->tanker->status !== 'under_maintenance'
-                    ),
+                            Notification::make()
+                                ->title('Status tanker berhasil diubah')
+                                ->body("Tanker {$record->tanker->nopol} telah diset menjadi Under Maintenance")
+                                ->success()
+                                ->send();
+                        })
+                        ->visible(
+                            fn(TankerInspection $record) =>
+                            $record->tanker->status !== 'under_maintenance'
+                        ),
+                ])
             ])
             ->headerActions([
                 // Action::make('export_report')
@@ -236,4 +231,3 @@ class FollowupInspaction extends Page implements HasTable
         ];
     }
 }
-
