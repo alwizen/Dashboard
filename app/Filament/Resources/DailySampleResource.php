@@ -19,7 +19,13 @@ class DailySampleResource extends Resource
 {
     protected static ?string $model = DailySample::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = '';
+
+    protected static ?string $navigationGroup = 'Laporan Harian';
+
+    protected static ?string $navigationLabel = 'Harian Retain Sample';
+
+    protected static ?string $label = 'Laporan Harian Retain Sample';    
 
     public static function form(Form $form): Form
     {

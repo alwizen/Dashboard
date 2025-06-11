@@ -22,7 +22,7 @@ class DriverAmtResource extends Resource
 
     protected static ?string $navigationGroup = 'Fleet Management';
 
-    protected static ?string $navigationIcon = '';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
 
     public static function form(Form $form): Form

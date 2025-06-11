@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CctvResource\Pages;
-use App\Filament\Resources\CctvResource\RelationManagers;
-use App\Models\Cctv;
+use App\Filament\Resources\TransportirResource\Pages;
+use App\Filament\Resources\TransportirResource\RelationManagers;
+use App\Models\Transportir;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,31 +13,30 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CctvResource extends Resource
+class TransportirResource extends Resource
 {
-    protected static ?string $model = Cctv::class;
+    protected static ?string $model = Transportir::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-video-camera';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
-    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationGroup = 'Fleet Management';
 
     public static function form(Form $form): Form
     {
         return $form
-        ->columns(1)
             ->schema([
-                Forms\Components\TextInput::make('code')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('location')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('status')
-                    ->onIcon('heroicon-m-bolt')
-                    ->offIcon('heroicon-m-video-camera-slash')
-                    ->label('Active')
-                    ->default(true),
-                Forms\Components\TextInput::make('notes')
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('phone')
+                    ->tel()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('address')
                     ->maxLength(255)
                     ->default(null),
             ]);
@@ -47,12 +46,13 @@ class CctvResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('location')
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('status'),
-                Tables\Columns\TextColumn::make('notes')
+                Tables\Columns\TextColumn::make('phone')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('address')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -69,6 +69,7 @@ class CctvResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+   Tables\Actions\DeleteAction::make(),
 
             ])
             ->bulkActions([
@@ -81,7 +82,7 @@ class CctvResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCctvs::route('/'),
+            'index' => Pages\ManageTransportirs::route('/'),
         ];
     }
 }

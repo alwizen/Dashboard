@@ -2,41 +2,28 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TankerResource\Pages;
-use App\Filament\Resources\TankerResource\RelationManagers;
-use App\Models\Tanker;
+use App\Filament\Resources\TankerBbkResource\Pages;
+use App\Filament\Resources\TankerBbkResource\RelationManagers;
+use App\Models\TankerBbk;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TankerResource extends Resource
+class TankerBbkResource extends Resource
 {
-    protected static ?string $model = Tanker::class;
+    protected static ?string $model = TankerBbk::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static ?string $navigationIcon = 'heroicon-o-hand-thumb-up';
 
     protected static ?string $navigationGroup = 'Fleet Management';
 
-    protected static ?string $label = 'Mobil Tangki';
+    protected static ?string $label = 'Mobil Tangki BBK';
 
-    protected static ?int $navigationSort = 2;
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['nopol', 'capacity', 'status', 'note'];
-    }
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        return [
-            'nopol' => $record->nopol,
-            'capacity' => $record->capacity,
-        ];
-    }
+    protected static ?string $navigationLabel = 'Mobil Tangki BBK';
 
     public static function form(Form $form): Form
     {
@@ -54,9 +41,10 @@ class TankerResource extends Resource
                 Forms\Components\TextInput::make('merk'),
                 Forms\Components\Select::make('comp')
                     ->options([
-                        '1' => '1',
                         '2' => '2',
                         '3' => '3',
+                        '4' => '4',
+                        '5' => '5'
                     ]),
                 Forms\Components\Select::make('capacity')
                     ->required()
@@ -84,7 +72,7 @@ class TankerResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+     public static function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -93,10 +81,6 @@ class TankerResource extends Resource
                 Tables\Columns\TextColumn::make('product')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('capacity')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('comp')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('merk')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('kir_expiry')
@@ -137,6 +121,7 @@ class TankerResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+   Tables\Actions\DeleteAction::make(),
 
             ])
             ->bulkActions([
@@ -145,12 +130,11 @@ class TankerResource extends Resource
                 ]),
             ]);
     }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTankers::route('/'),
-            'create' => Pages\CreateTanker::route('/create'),
-            'edit' => Pages\EditTanker::route('/{record}/edit'),
+            'index' => Pages\ManageTankerBbks::route('/'),
         ];
     }
 }

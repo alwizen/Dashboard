@@ -2,13 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Carbon\Carbon;
 
-class Tanker extends Model
+class TankerBbk extends Model
 {
     protected $fillable = [
         'nopol',
@@ -32,18 +28,6 @@ class Tanker extends Model
     {
         return $this->belongsTo(Transportir::class);
     }
-
-    public function inspections(): HasMany
-    {
-        return $this->hasMany(TankerInspection::class);
-    }
-
-    // Get latest inspection
-    public function latestInspection()
-    {
-        return $this->hasOne(TankerInspection::class)->latestOfMany();
-    }
-
     public function getStatusLabelAttribute()
     {
         return match ($this->status) {
@@ -53,17 +37,6 @@ class Tanker extends Model
             default => 'Unknown',
         };
     }
-
-    // Get compartment labels for form
-    public function getCompartmentLabelsAttribute(): array
-    {
-        $labels = [];
-        for ($i = 1; $i <= $this->comp; $i++) {
-            $labels[] = "Kompartemen $i";
-        }
-        return $labels;
-    }
-
     //peringatan masa berakhir
     public function scopeExpiringSoon(Builder $query): Builder
     {
@@ -75,15 +48,5 @@ class Tanker extends Model
                 ->orWhereBetween('kim_expiry', [$today, $nextWeek]);
         });
     }
-
-    // Scope untuk filter tanker berdasarkan status inspeksi terakhir
-    public function scopeWithLatestInspectionStatus(Builder $query, string $status = null)
-    {
-        return $query->with('latestInspection')
-            ->when($status, function ($q) use ($status) {
-                $q->whereHas('latestInspection', function ($inspectionQuery) use ($status) {
-                    $inspectionQuery->where('overall_status', $status);
-                });
-            });
-    }
 }
+

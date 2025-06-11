@@ -25,6 +25,7 @@ class DailyCctvReportResource extends Resource
     protected static ?string $label = 'Laporan CCTV Harian';
 
     protected static ?string $pluralLabel = 'Laporan CCTV Harian';
+    
     protected static ?string $navigationLabel = 'Laporan CCTV Harian';
 
     public static function form(Form $form): Form
