@@ -8,9 +8,9 @@ use Filament\Widgets\Widget;
 class TankerInspectionWidget extends Widget
 {
     protected static string $view = 'filament.widgets.tanker-inspection-widget';
-    // protected int|string|array $columnSpan = 'full';
-    
-    // Menambahkan polling untuk realtime update (setiap 30 detik)
+
+    protected static ?int $sort = 3;
+
     protected static ?string $pollingInterval = '30s';
 
     public function getViewData(): array

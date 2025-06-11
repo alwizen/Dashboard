@@ -142,6 +142,14 @@ class FollowupInspaction extends Page implements HasTable
             ])
             ->actions([
                 ActionGroup::make([
+                    Tables\Actions\Action::make('edit_inspection')
+                        ->label('Edit Inspeksi')
+                        ->icon('heroicon-m-pencil')
+                        ->color('warning')
+                        ->url(
+                            fn(TankerInspection $record): string =>
+                            route('filament.admin.resources.tanker-inspections.edit', $record)
+                        ),
                     Tables\Actions\Action::make('new_inspection')
                         ->label('Inspeksi Ulang')
                         ->icon('heroicon-m-clipboard-document-check')

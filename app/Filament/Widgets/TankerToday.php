@@ -3,13 +3,14 @@
 namespace App\Filament\Widgets;
 
 use App\Models\DailyReportTanker;
+use App\Models\Tanker;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TankerToday extends BaseWidget
 {
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
 
     protected ?string $heading = 'Mobil Tangki Overview';
 
@@ -21,20 +22,19 @@ class TankerToday extends BaseWidget
 
         $report = DailyReportTanker::whereDate('report_date', $today)->first();
 
-        // Jika tidak ada data hari ini, tampilkan nol atau fallback
-        $total = $report->count_tankers ?? 0;
+        // Ambil total tanker dari tabel Tanker langsung
+        $total = Tanker::count();
+
         $maintenance = $report->count_tanker_under_maintenance ?? 0;
         $afkir = $report->count_tanker_afkir ?? 0;
         $available = $report->count_tanker_available ?? 0;
 
-        // Contoh: kapasitas tetap diambil dari model Tanker realtime
-        $totalCapacityAvailable = \App\Models\Tanker::where('status', 'available')->sum('capacity');
+        $totalCapacityAvailable = Tanker::where('status', 'available')->sum('capacity');
 
         return [
-            Stat::make('Total Tankers', $total)
+            Stat::make('Total Mobil Tangki', $total)
                 ->description('Total Mobil Tangki FT Tegal')
                 ->icon('heroicon-o-truck')
-                ->color('info')
                 ->color('primary'),
 
             Stat::make('Under Maintenance', $maintenance)

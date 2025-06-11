@@ -53,8 +53,7 @@ class TankerResource extends Resource
                             ->default('multi')
                             ->maxLength(255),
                         Forms\Components\Select::make('transportir_id')
-                            ->relationship('transportir', 'name')
-                            ->searchable(),
+                            ->relationship('transportir', 'name'),
                         Forms\Components\TextInput::make('merk'),
                     ])
                     ->columns(2),
