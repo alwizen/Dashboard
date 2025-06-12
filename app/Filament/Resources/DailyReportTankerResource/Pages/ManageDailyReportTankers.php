@@ -4,9 +4,9 @@ namespace App\Filament\Resources\DailyReportTankerResource\Pages;
 
 use App\Filament\Resources\DailyReportTankerResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\ManageRecords;
 
-class ListDailyReportTankers extends ListRecords
+class ManageDailyReportTankers extends ManageRecords
 {
     protected static string $resource = DailyReportTankerResource::class;
 

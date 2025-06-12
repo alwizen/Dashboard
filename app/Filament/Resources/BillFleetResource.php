@@ -102,6 +102,7 @@ class BillFleetResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('progress')
                     ->badge()
+                    ->searchable()
                     ->color(fn(string $state): string => match ($state) {
                         'BA' => 'primary',
                         'PR' => 'primary',
@@ -112,11 +113,11 @@ class BillFleetResource extends Resource
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'draft' => 'gray',
-                        'progress' => 'warning',
-                        'done' => 'success',
-                    })
+                    // ->color(fn(string $state): string => match ($state) {
+                    //     'draft' => 'gray',
+                    //     'progress' => 'warning',
+                    //     'done' => 'success',
+                    // })
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('bill_value')
@@ -135,7 +136,33 @@ class BillFleetResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('month')
+                    ->label('Filter Bulan')
+                    ->options([
+                        'januari' => 'Januari',
+                        'februari' => 'Februari',
+                        'maret' => 'Maret',
+                        'april' => 'April',
+                        'mei' => 'Mei',
+                        'juni' => 'Juni',
+                        'juli' => 'Juli',
+                        'agustus' => 'Agustus',
+                        'september' => 'September',
+                        'oktober' => 'Oktober',
+                        'november' => 'November',
+                        'desember' => 'Desember',
+                    ])
+                    ->placeholder('Semua Bulan'),
+            
+                Tables\Filters\SelectFilter::make('year')
+                    ->label('Filter Tahun')
+                    ->options(
+                        collect(range(2020, now()->year))
+                            ->reverse()
+                            ->mapWithKeys(fn ($year) => [$year => $year])
+                            ->toArray()
+                    )
+                    ->placeholder('Semua Tahun'),
             ])
             ->actions([
                 Action::make('toPR')

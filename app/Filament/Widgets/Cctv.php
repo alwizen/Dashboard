@@ -4,22 +4,25 @@ namespace App\Filament\Widgets;
 
 use App\Models\Cctv as ModelsCctv;
 use App\Models\DailyCctvReport;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class Cctv extends BaseWidget
 {
+    use HasWidgetShield;
     /**
      * The name of the widget.
      *
      * @var string
      */
-    protected ?string $heading = 'CCTV Overview';
+    // protected ?string $heading = 'CCTV Overview';
+    protected static bool $isLazy = false;
 
     protected static ?string $pollingInterval = '10s';
 
-    protected static ?int $sort = 6;
+    protected static ?int $sort = 2;
 
 
     // public static string? 

@@ -33,8 +33,8 @@ class CctvResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('status')
-                    ->onIcon('heroicon-m-bolt')
-                    ->offIcon('heroicon-m-video-camera-slash')
+                    ->onIcon('heroicon-o-bolt')
+                    ->offIcon('heroicon-o-video-camera-slash')
                     ->label('Active')
                     ->default(true),
                 Forms\Components\TextInput::make('notes')

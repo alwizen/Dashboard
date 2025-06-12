@@ -3,13 +3,18 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Tanker;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Widget;
 
 class TankerInspectionWidget extends Widget
 {
+    use HasWidgetShield;
+
     protected static string $view = 'filament.widgets.tanker-inspection-widget';
 
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 5;
+
+    protected static bool $isLazy = false;
 
     protected static ?string $pollingInterval = '30s';
 

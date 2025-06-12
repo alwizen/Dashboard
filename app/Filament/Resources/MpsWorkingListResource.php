@@ -19,7 +19,7 @@ class MpsWorkingListResource extends Resource
 {
     protected static ?string $model = MpsWorkingList::class;
 
-    protected static ?string $navigationIcon = '';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
     protected static ?string $navigationGroup = 'MPS';
 

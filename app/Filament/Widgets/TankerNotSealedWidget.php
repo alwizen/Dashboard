@@ -3,17 +3,22 @@
 namespace App\Filament\Widgets;
 
 use App\Models\TankerInspection;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class TankerNotSealedWidget extends BaseWidget
 {
+    use HasWidgetShield;
+
     protected static ?string $heading = '🚩 MT Tidak Lanjut Alpukat (Tidak Kedap)';
+
+    protected static bool $isLazy = false;
 
     // protected int | string | array $columnSpan = 'full';
 
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 5;
 
     public function table(Table $table): Table
     {

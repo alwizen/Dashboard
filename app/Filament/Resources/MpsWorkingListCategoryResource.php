@@ -18,7 +18,7 @@ class MpsWorkingListCategoryResource extends Resource
 {
     protected static ?string $model = MpsWorkingListCategory::class;
 
-    protected static ?string $navigationIcon = '';
+    protected static ?string $navigationIcon = 'heroicon-o-hashtag';
 
     protected static ?string $navigationGroup = 'MPS';
 
@@ -29,8 +29,9 @@ class MpsWorkingListCategoryResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn (callable $set, $state) =>
-                    $set('slug', Str::slug($state))
+                    ->afterStateUpdated(
+                        fn(callable $set, $state) =>
+                        $set('slug', Str::slug($state))
                     )
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')

@@ -76,7 +76,7 @@ class UserResource extends Resource
                             ->icon('heroicon-o-shield-check')
                             ->grow(false),
                         Tables\Columns\TextColumn::make('email')
-                            ->icon('heroicon-m-envelope')
+                            ->icon('heroicon-o-envelope')
                             ->searchable()
                             ->grow(false),
                     ])->alignStart()->visibleFrom('lg')->space(1)
@@ -93,7 +93,7 @@ class UserResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Action::make('Set Role')
-                    ->icon('heroicon-m-adjustments-vertical')
+                    ->icon('heroicon-o-adjustments-vertical')
                     ->form([
                         Select::make('role')
                             ->relationship('roles', 'name')

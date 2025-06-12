@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('')
             ->favicon(asset('images/fav.png'))
             ->brandLogo(asset('images/light.png'))
-            ->brandLogoHeight('5rem')
+            ->brandLogoHeight('3.5rem')
             ->darkModeBrandLogo(asset('images/dark.png'))
             ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(Login::class))
             // ->when($this->settings->registration_enabled ?? true, fn($panel) => $panel->registration())
@@ -84,7 +84,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Cctv::class,
-                WeatherToday::class,
+                // WeatherToday::class,
 
                 // Widgets\FilamentInfoWidget::class,
             ])

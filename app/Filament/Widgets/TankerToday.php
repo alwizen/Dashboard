@@ -4,15 +4,20 @@ namespace App\Filament\Widgets;
 
 use App\Models\DailyReportTanker;
 use App\Models\Tanker;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class TankerToday extends BaseWidget
 {
-    protected static ?int $sort = 5;
+    use HasWidgetShield;
 
-    protected ?string $heading = 'Mobil Tangki Overview';
+    protected static ?int $sort = 1;
+
+    protected static bool $isLazy = false;
+
+    protected ?string $heading = 'Program Kerja Fleet';
 
     protected static ?string $pollingInterval = '10s';
 
@@ -22,14 +27,12 @@ class TankerToday extends BaseWidget
 
         $report = DailyReportTanker::whereDate('report_date', $today)->first();
 
-        // Ambil total tanker dari tabel Tanker langsung
         $total = Tanker::count();
 
         $maintenance = $report->count_tanker_under_maintenance ?? 0;
         $afkir = $report->count_tanker_afkir ?? 0;
         $available = $report->count_tanker_available ?? 0;
-
-        $totalCapacityAvailable = Tanker::where('status', 'available')->sum('capacity');
+        $totalCapacityAvailable = $report->total_capacity_available ?? 0;
 
         return [
             Stat::make('Total Mobil Tangki', $total)

@@ -124,8 +124,8 @@ class TankerResource extends Resource
                 Tables\Columns\TextColumn::make('product')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('capacity')
-                ->label('Kap')
-                ->suffix(' KL')
+                    ->label('Kap')
+                    ->suffix(' KL')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comp')
                     ->searchable()
@@ -156,7 +156,7 @@ class TankerResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->searchable()
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'available' => 'success',
                         'under_maintenance' => 'warning',
                         'afkir' => 'danger',
@@ -171,7 +171,8 @@ class TankerResource extends Resource
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Last Update')
+                    ->toggleable(isToggledHiddenByDefault: false),
             ])
             ->filters([
                 //
@@ -199,32 +200,63 @@ class TankerResource extends Resource
                         ->color('primary')
                         ->tooltip('Lihat riwayat Kir'),
                 ])
-                    ->icon('heroicon-m-clock')
+                    ->icon('heroicon-o-clock')
                     ->tooltip('Riwayat')
                     ->label(''),
 
                 ActionGroup::make([
                     Tables\Actions\Action::make('set_maintenance')
                         ->label('Set Under Maintenance')
-                        ->icon('heroicon-m-wrench-screwdriver')
+                        ->icon('heroicon-o-wrench-screwdriver')
                         ->color('warning')
                         ->visible(fn(Tanker $record) => $record->status !== 'under_maintenance')
-                        ->requiresConfirmation()
-                        ->modalHeading('Set Status Under Maintenance')
-                        ->modalDescription(fn(Tanker $record) => "Apakah Anda yakin ingin mengubah status tanker {$record->nopol} menjadi Under Maintenance?")
-                        ->action(function (Tanker $record) {
+                        ->form([
+                            Forms\Components\DatePicker::make('date')
+                                ->label('Tanggal Perbaikan')
+                                ->required(),
+                            Forms\Components\Textarea::make('description')
+                                ->label('Deskripsi')
+                                ->required(),
+                            
+                        ])
+                        ->modalHeading('Set Under Maintenance & Catat Perbaikan')
+                        ->modalSubmitActionLabel('Simpan')
+                        ->action(function (array $data, Tanker $record) {
+                            // Simpan riwayat maintenance
+                            $record->maintenances()->create($data);
+
+                            // Update status tanker
                             $record->update(['status' => 'under_maintenance']);
 
                             Notification::make()
-                                ->title('Status tanker berhasil diubah')
-                                ->body("Tanker {$record->nopol} telah diset menjadi Under Maintenance")
+                                ->title('Berhasil!')
+                                ->body("Tanker {$record->nopol} diset sebagai Under Maintenance dan riwayat dicatat.")
                                 ->success()
                                 ->send();
-                        }),
+                        })
+                        ->requiresConfirmation(false), // karena kita pakai form
+
+                    // Tables\Actions\Action::make('set_maintenance2   ')
+                    //     ->label('Set Under Maintenance')
+                    //     ->icon('heroicon-o-wrench-screwdriver')
+                    //     ->color('warning')
+                    //     ->visible(fn(Tanker $record) => $record->status !== 'under_maintenance')
+                    //     ->requiresConfirmation()
+                    //     ->modalHeading('Set Status Under Maintenance')
+                    //     ->modalDescription(fn(Tanker $record) => "Apakah Anda yakin ingin mengubah status tanker {$record->nopol} menjadi Under Maintenance?")
+                    //     ->action(function (Tanker $record) {
+                    //         $record->update(['status' => 'under_maintenance']);
+
+                    //         Notification::make()
+                    //             ->title('Status tanker berhasil diubah')
+                    //             ->body("Tanker {$record->nopol} telah diset menjadi Under Maintenance")
+                    //             ->success()
+                    //             ->send();
+                    //     }),
 
                     Tables\Actions\Action::make('set_afkir')
                         ->label('Set Afkir')
-                        ->icon('heroicon-m-archive-box-x-mark')
+                        ->icon('heroicon-o-archive-box-x-mark')
                         ->color('danger')
                         ->visible(fn(Tanker $record) => $record->status !== 'afkir')
                         ->requiresConfirmation()
@@ -242,7 +274,7 @@ class TankerResource extends Resource
 
                     Tables\Actions\Action::make('set_available')
                         ->label('Set Available')
-                        ->icon('heroicon-m-check-badge')
+                        ->icon('heroicon-o-check-badge')
                         ->color('success')
                         ->visible(fn(Tanker $record) => $record->status === 'under_maintenance')
                         ->requiresConfirmation()

@@ -23,7 +23,9 @@ class FootValveInspactionResource extends Resource
 {
     protected static ?string $model = FootValveInspaction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
+
+    protected static ?string $navigationGroup = 'Fleet Management';
 
     public static function form(Form $form): Form
     {
@@ -135,7 +137,7 @@ class FootValveInspactionResource extends Resource
             ->actions([
                 Tables\Actions\Action::make('view_photos')
                     ->label('Lihat Foto')
-                    ->icon('heroicon-m-photo')
+                    ->icon('heroicon-o-photo')
                     ->modalHeading('Foto Inspeksi')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Tutup')

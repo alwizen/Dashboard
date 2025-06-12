@@ -23,9 +23,11 @@ class FollowupInspaction extends Page implements HasTable
 
     protected static string $view = 'filament.pages.followup-inspaction';
 
-    protected static ?string $navigationLabel = 'Tindak Lanjut Kekedapan';
+    protected static ?string $navigationLabel = 'Tindak Lanjut Uji Alpukat';
 
     protected static ?string $title = 'Tindak Lanjut Kekedapan';
+
+    protected static ?string $navigationGroup = 'Fleet Management';
 
     // protected static ?string $navigationGroup = 'Inspeksi';
 
@@ -144,7 +146,7 @@ class FollowupInspaction extends Page implements HasTable
                 ActionGroup::make([
                     Tables\Actions\Action::make('edit_inspection')
                         ->label('Edit Inspeksi')
-                        ->icon('heroicon-m-pencil')
+                        ->icon('heroicon-o-pencil')
                         ->color('warning')
                         ->url(
                             fn(TankerInspection $record): string =>
@@ -152,7 +154,7 @@ class FollowupInspaction extends Page implements HasTable
                         ),
                     Tables\Actions\Action::make('new_inspection')
                         ->label('Inspeksi Ulang')
-                        ->icon('heroicon-m-clipboard-document-check')
+                        ->icon('heroicon-o-clipboard-document-check')
                         ->color('success')
                         ->url(
                             fn(TankerInspection $record): string =>
@@ -163,12 +165,12 @@ class FollowupInspaction extends Page implements HasTable
 
                     Tables\Actions\EditAction::make()
                         ->label('Edit Inspeksi')
-                        ->icon('heroicon-m-pencil-square')
+                        ->icon('heroicon-o-pencil-square')
                         ->color('primary'),
 
                     Tables\Actions\Action::make('set_maintenance')
                         ->label('Set Under Maintenance')
-                        ->icon('heroicon-m-wrench-screwdriver')
+                        ->icon('heroicon-o-wrench-screwdriver')
                         ->color('warning')
                         ->requiresConfirmation()
                         ->modalHeading('Set Status Under Maintenance')
@@ -194,7 +196,7 @@ class FollowupInspaction extends Page implements HasTable
             ->headerActions([
                 // Action::make('export_report')
                 //     ->label('Export Laporan')
-                //     ->icon('heroicon-m-document-arrow-down')
+                //     ->icon('heroicon-o-document-arrow-down')
                 //     ->color('gray')
                 //     ->action(function () {
                 //         Notification::make()
@@ -214,7 +216,7 @@ class FollowupInspaction extends Page implements HasTable
         return [
             Action::make('refresh')
                 ->label('Refresh Data')
-                ->icon('heroicon-m-arrow-path')
+                ->icon('heroicon-o-arrow-path')
                 ->action(function () {
                     $this->resetTable();
 
