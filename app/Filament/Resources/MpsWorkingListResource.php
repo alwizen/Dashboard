@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\MpsWorkingListResource\Pages;
 use App\Filament\Resources\MpsWorkingListResource\RelationManagers;
+use App\Filament\Resources\MpsWorkingListResource\RelationManagers\ProgressHistoriesRelationManager;
+use App\Models\MpsProgressHistory;
 use App\Models\MpsWorkingList;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Table;
+use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
 use IbrahimBougaoua\FilaProgress\Tables\Columns\ProgressBar;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -20,6 +23,8 @@ class MpsWorkingListResource extends Resource
     protected static ?string $model = MpsWorkingList::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+
+    protected static ?string $navigationLabel = 'Progam Kerja MPS';
 
     protected static ?string $navigationGroup = 'MPS';
 
@@ -119,11 +124,19 @@ class MpsWorkingListResource extends Resource
                 //
             ])
             ->actions([
+                RelationManagerAction::make('mpsHistory')
+                        ->label('')
+                        ->relationManager(ProgressHistoriesRelationManager::make())
+                        ->icon('heroicon-o-paper-clip')
+                        ->color('warning')
+                        ->tooltip('Riwayat Pekerjaan'),
+                        
                 ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\ViewAction::make()
                 ])
+                ->tooltip('Aksi')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -132,12 +145,12 @@ class MpsWorkingListResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+    // public static function getRelations(): array
+    // {
+    //     return [
+    //         // ProgressHistoriesRelationManager::class
+    //     ];
+    // }
 
     public static function getPages(): array
     {

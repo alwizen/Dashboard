@@ -20,7 +20,7 @@ class MpsWorkingListCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-hashtag';
 
-    protected static ?string $navigationGroup = 'MPS';
+    protected static ?string $navigationGroup = 'Master Data';
 
     public static function form(Form $form): Form
     {

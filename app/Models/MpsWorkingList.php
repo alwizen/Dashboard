@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MpsWorkingList extends Model
 {
@@ -24,5 +25,9 @@ class MpsWorkingList extends Model
     public function mpsCategory()
     {
         return $this->belongsTo(MpsWorkingListCategory::class, 'category_id');
+    }
+    public function progressHistories(): HasMany
+    {
+        return $this->hasMany(MpsProgressHistory::class);
     }
 }

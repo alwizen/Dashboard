@@ -26,6 +26,9 @@ class WorkListResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
     // protected static ?string $navigationGroup = 'Project Management';
+    protected static bool $shouldRegisterNavigation = false;
+
+    
     protected static ?string $navigationLabel = 'Program Kerja';
 
     public static function form(Form $form): Form

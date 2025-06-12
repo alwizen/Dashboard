@@ -2,11 +2,14 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\MpsWorkingListResource\RelationManagers\ProgressHistoriesRelationManager;
 use App\Models\MpsWorkingList;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Actions\EditAction;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
 use IbrahimBougaoua\FilaProgress\Tables\Columns\ProgressBar;
 use Illuminate\Database\Eloquent\Model;
 
@@ -66,6 +69,14 @@ class MpsWorkingListWidget extends BaseWidget
                         'total' => 100,
                         'progress' => $record->progres,
                     ]),
+            ])
+            ->actions([
+                RelationManagerAction::make('mpsHistory')
+                    ->label('')
+                    ->relationManager(ProgressHistoriesRelationManager::class)
+                    ->icon('heroicon-o-bars-3-bottom-left')
+                    ->color('warning')
+                    ->tooltip('Riwayat Pekerjaan'),
             ]);
     }
 }
