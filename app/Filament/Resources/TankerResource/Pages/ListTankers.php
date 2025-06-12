@@ -20,15 +20,17 @@ class ListTankers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExportAction::make()
-                ->exporter(\App\Filament\Exports\TankerExporter::class)
-                ->label('Export Tankers')
-                ->icon('heroicon-o-cloud-arrow-up'),
+            // ExportAction::make()
+            //     ->exporter(\App\Filament\Exports\TankerExporter::class)
+            //     ->label('Export Tankers')
+            //     ->icon('heroicon-o-cloud-arrow-up'),
             ImportAction::make()
                 ->importer(\App\Filament\Imports\TankerImporter::class)
                 ->label('Import Tankers')
                 ->icon('heroicon-o-cloud-arrow-down'),
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label('Tambah Mobil Tangki')
+            ->icon('heroicon-o-plus'),
         ];
     }
 
@@ -73,12 +75,12 @@ class ListTankers extends ListRecords
                     ->body("Mobil tangki berikut KIR-nya sudah berakhir:\n\n{$kirExpiredText}")
                     ->danger()
                     ->seconds(3)
-                    ->actions([
-                        Action::make('Edit')
-                            ->button()
-                            ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
+                    // ->actions([
+                    //     Action::make('Edit')
+                    //         ->button()
+                    //         ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
                     
-                    ])
+                    // ])
                     ->send();
             }
 
@@ -90,12 +92,12 @@ class ListTankers extends ListRecords
                     ->body("Mobil tangki berikut KIR-nya  berakhir:\n\n{$kirWarningText}")
                     ->seconds(3)
                     ->warning()
-                    ->actions([
-                        Action::make('Edit')
-                            ->button()
-                            ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
+                    // ->actions([
+                    //     Action::make('Edit')
+                    //         ->button()
+                    //         ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
                     
-                    ])
+                    // ])
                     ->send();
             }
         }
@@ -137,12 +139,12 @@ class ListTankers extends ListRecords
                     ->body("Mobil tangki berikut KIM-nya sudah berakhir:\n\n{$kimExpiredText}")
                     ->seconds(3)
                     ->danger()
-                    ->actions([
-                        Action::make('Edit')
-                            ->button()
-                            ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
+                    // ->actions([
+                    //     Action::make('Edit')
+                    //         ->button()
+                    //         ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
                        
-                    ])
+                    // ])
                     ->send();
             }
 
@@ -154,12 +156,12 @@ class ListTankers extends ListRecords
                     ->body("Mobil tangki berikut KIM-nya  berakhir:\n\n{$kimWarningText}")
                     ->seconds(3)
                     ->warning()
-                    ->actions([
-                        Action::make('Edit')
-                            ->button()
-                            ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
+                    // ->actions([
+                    //     Action::make('Edit')
+                    //         ->button()
+                    //         ->url(route('filament.admin.resources.tankers.edit', ['record' => $t->id]), shouldOpenInNewTab: true),
                     
-                    ])
+                    // ])
                     ->send();
             }
         }

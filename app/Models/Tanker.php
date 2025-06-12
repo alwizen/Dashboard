@@ -28,6 +28,22 @@ class Tanker extends Model
         'kim_expiry' => 'date',
     ];
 
+    public function maintenances()
+    {
+        return $this->hasMany(TankerMaintenance::class);
+    }
+
+    public function kirHistories()
+    {
+        return $this->hasMany(TankerKirHistory::class);
+    }
+
+    public function kimHistories()
+    {
+        return $this->hasMany(TankerKimHistory::class);
+    }
+
+
     public function transportir(): BelongsTo
     {
         return $this->belongsTo(Transportir::class);

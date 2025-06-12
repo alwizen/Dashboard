@@ -17,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class FootValveInspactionResource extends Resource
 {
@@ -132,11 +133,20 @@ class FootValveInspactionResource extends Resource
                     ->searchable(),
             ])
             ->actions([
+                Tables\Actions\Action::make('view_photos')
+                    ->label('Lihat Foto')
+                    ->icon('heroicon-m-photo')
+                    ->modalHeading('Foto Inspeksi')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Tutup')
+                    ->action(fn() => null) // Tidak ada aksi karena hanya tampilan
+                    ->modalContent(fn($record) => view('filament.modals.view-footvalve-photos', ['record' => $record])),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

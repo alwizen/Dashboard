@@ -57,7 +57,8 @@ class BillFleetResource extends Resource
                     ->maxValue(2100)
                     ->default(date('Y'))
                     ->label('Tahun'),
-                Forms\Components\TextInput::make('bill_name'),
+                Forms\Components\TextInput::make('bill_name')
+                ->label('Nama Tagihan'),
                 Forms\Components\TextInput::make('bill_value')
                     ->numeric()
                     ->prefix('Rp')
@@ -71,15 +72,16 @@ class BillFleetResource extends Resource
                         'SA' => 'SA',
                         'PA' => 'PA',
                     ])
+                    ->default('BA')
                     ->label('Progres'),
 
                 Forms\Components\Select::make('status')
                     ->options([
                         'draft' => 'Draft',
-                        'progress' => 'progress',
+                        'berjalan' => 'Berjalan',
                         'done' => 'Done (PA)',
                     ])
-                    ->default('Progress')
+                    ->default('berjalan')
                     ->label('Status'),
             ]);
     }
@@ -116,7 +118,7 @@ class BillFleetResource extends Resource
                         'done' => 'success',
                     })
                     ->searchable(),
-                    
+
                 Tables\Columns\TextColumn::make('bill_value')
                     ->label('Jumlah Tagihan')
                     ->summarize(Sum::make())
