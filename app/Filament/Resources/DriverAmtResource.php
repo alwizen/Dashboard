@@ -20,7 +20,7 @@ class DriverAmtResource extends Resource
 
     protected static ?string $navigationLabel = 'Awak Mobil Tangki';
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 

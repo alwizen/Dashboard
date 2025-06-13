@@ -145,13 +145,6 @@ class MpsWorkingListResource extends Resource
             ]);
     }
 
-    // public static function getRelations(): array
-    // {
-    //     return [
-    //         // ProgressHistoriesRelationManager::class
-    //     ];
-    // }
-
     public static function getPages(): array
     {
         return [

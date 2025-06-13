@@ -2,8 +2,8 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\MpsWorkingListResource\RelationManagers\ProgressHistoriesRelationManager;
-use App\Models\MpsWorkingList;
+use App\Filament\Resources\GaWorkingListResource\RelationManagers\ProgressHistoriesRelationManager;
+use App\Models\GaWorkingList;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -11,30 +11,32 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Guava\FilamentModalRelationManagers\Actions\Table\RelationManagerAction;
 use IbrahimBougaoua\FilaProgress\Tables\Columns\ProgressBar;
 
-class MpsWorkingListWidget extends BaseWidget
+class GaWorkingListTableWidget extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected static ?string $heading = '';
+    protected static ?string $heading = 'Program Kerja GA';
 
     protected static bool $isLazy = false;
 
     protected int | string | array $columnSpan = 'full';
 
-    protected static ?int $sort = 0;
+    protected static ?int $sort = 7;
 
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(MpsWorkingList::query())
+            ->query(
+                GaWorkingList::query()
+            )
             ->poll('5s')
             ->columns([
                 Tables\Columns\TextColumn::make('#')
                     ->rowIndex(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
-                    ->label('Program Kerja MPS')
+                    ->label('Program Kerja GA')
                     ->tooltip(function (Tables\Columns\TextColumn $column): ?string {
                         $state = $column->getState();
                         if (strlen($state) <= 50) {
@@ -42,10 +44,7 @@ class MpsWorkingListWidget extends BaseWidget
                         }
                         return $state;
                     }),
-                Tables\Columns\TextColumn::make('mpsCategory.name')
-                    ->numeric()
-                    ->label('Kategori Program')
-                    ->sortable(),
+               
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn($state): string => match ($state) {
@@ -65,17 +64,6 @@ class MpsWorkingListWidget extends BaseWidget
                         'total' => 100,
                         'progress' => $record->progres,
                     ]),
-            ])
-            ->filters([
-                Tables\Filters\SelectFilter::make('status')
-                    ->label('Status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'in_progress' => 'In Progress',
-                        'completed' => 'Completed',
-                        'on_hold' => 'On Hold',
-                    ])
-                    ->native(false),
             ])
             ->actions([
                 RelationManagerAction::make('mpsHistory')

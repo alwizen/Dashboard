@@ -27,7 +27,7 @@ class FollowupInspaction extends Page implements HasTable
 
     protected static ?string $title = 'Tindak Lanjut Kekedapan';
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     // protected static ?string $navigationGroup = 'Inspeksi';
 

@@ -27,7 +27,7 @@ class TankerResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     protected static ?string $label = 'Mobil Tangki';
 

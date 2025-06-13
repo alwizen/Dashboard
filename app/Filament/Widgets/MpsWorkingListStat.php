@@ -21,7 +21,7 @@ class MpsWorkingListStat extends BaseWidget
     {
 
         return [
-            Stat::make('Total Program Kerja', MpsWorkingList::count())
+            Stat::make('Total Program Kerja MPS', MpsWorkingList::count())
                 ->description('Semua program terdaftar')
                 ->icon('heroicon-o-clipboard-document-list')
                 ->color('primary'),

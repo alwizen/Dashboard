@@ -25,7 +25,7 @@ class FootValveInspactionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     public static function form(Form $form): Form
     {

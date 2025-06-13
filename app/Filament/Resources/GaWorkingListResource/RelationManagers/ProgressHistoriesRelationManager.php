@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\MpsWorkingListResource\RelationManagers;
+namespace App\Filament\Resources\GaWorkingListResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Table; 
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -14,7 +14,7 @@ class ProgressHistoriesRelationManager extends RelationManager
 {
     protected static string $relationship = 'progressHistories';
 
-    protected static ?string $title = '';    
+    protected static ?string $title = '';
 
     public function form(Form $form): Form
     {
@@ -24,11 +24,21 @@ class ProgressHistoriesRelationManager extends RelationManager
                     ->label('Tanggal')
                     ->default(now())
                     ->required(),
-                Forms\Components\TextInput::make('progress')
-                    ->label('Progress')
-                    ->suffix('%')
-                    ->numeric()
-                    ->required(),
+                Forms\Components\Select::make('progress')
+                    ->options([
+                        '0' => '0',
+                        '10' => '10',
+                        '20' => '20',
+                        '30' => '30',
+                        '40' => '40',
+                        '50' => '50',
+                        '60' => '60',
+                        '70' => '70',
+                        '80' => '80',
+                        '90' => '90',
+                        '100' => '100',
+                    ])
+                    ->suffix(' %'),
                 Forms\Components\Textarea::make('note')
                     ->label('Keterangan')
                     ->columnSpanFull()
@@ -44,7 +54,7 @@ class ProgressHistoriesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('progress')
                     ->suffix(' %'),
                 Tables\Columns\TextColumn::make('progress_date')
-                ->date('d-m-Y'),
+                    ->date('d-m-Y'),
                 Tables\Columns\TextColumn::make('note'),
             ])
             ->filters([

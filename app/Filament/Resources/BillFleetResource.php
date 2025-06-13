@@ -23,7 +23,7 @@ class BillFleetResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calculator';
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     protected static ?string $label = 'Tagihan Fleet';
 

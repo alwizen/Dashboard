@@ -76,8 +76,9 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->navigationGroups([
-                'Fleet Management',
                 'MPS',
+                'Fleet',
+                'GA',
                 'Laporan Harian',
                 'Master Data'
             ])

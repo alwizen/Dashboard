@@ -19,7 +19,7 @@ class TankerBbkResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-hand-thumb-up';
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     protected static ?string $label = 'Mobil Tangki BBK';
 

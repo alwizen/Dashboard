@@ -17,7 +17,7 @@ class TankerInspectionResource extends Resource
 {
     protected static ?string $model = TankerInspection::class;
 
-    protected static ?string $navigationGroup = 'Fleet Management';
+    protected static ?string $navigationGroup = 'Fleet';
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
     

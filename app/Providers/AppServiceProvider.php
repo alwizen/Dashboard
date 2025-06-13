@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\GaProgressHistory;
 use App\Models\MpsProgressHistory;
 use App\Models\User;
+use App\Observers\GaProgressHistoryObserver;
 use App\Observers\MpsProgressHistoryObserver;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Support\Facades\Blade;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         MpsProgressHistory::observe(MpsProgressHistoryObserver::class);
+        GaProgressHistory::observe(GaProgressHistoryObserver::class);
 
         Gate::define('viewApiDocs', function (User $user) {
             return true;
