@@ -85,6 +85,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->navigationGroups([
                 'MPS',
+                'RSD',
                 'Fleet',
                 'GA',
                 'Laporan Harian',

@@ -22,3 +22,4 @@ class Receiving extends Model
         return $this->hasMany(ReceivingItem::class);
     }
 }
+ 

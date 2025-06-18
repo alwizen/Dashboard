@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ReceivingResource\Pages;
-use App\Filament\Resources\ReceivingResource\RelationManagers;
-use App\Models\Receiving;
+use App\Filament\Resources\DistributionResource\Pages;
+use App\Filament\Resources\DistributionResource\RelationManagers;
+use App\Models\Distribution;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,44 +16,36 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-use function Laravel\Prompts\select;
-
-class ReceivingResource extends Resource
+class DistributionResource extends Resource
 {
-    protected static ?string $model = Receiving::class;
+    protected static ?string $model = Distribution::class;
 
-    protected static ?string $navigationLabel = 'Penerimaan';
-
-    protected static ?string $label = 'Penerimaan BBM';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-top-right-on-square';
 
     protected static ?string $navigationGroup = 'RSD';
-
-    // protected static bool $shouldRegisterNavigation = false;
-
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-right-end-on-rectangle';
 
     public static function form(Form $form): Form
     {
         return $form
             ->columns(1)
             ->schema([
-                Forms\Components\DatePicker::make('receiving_date')
+                Forms\Components\DatePicker::make('distribution_date')
+                    ->label('Tanggal Penyaluran')
                     ->default(now())
-                    ->label('Tanggal Penerimaan')
                     ->required(),
                 Repeater::make('items')
                     ->relationship('items')
-                    ->columns(3)
+                    ->columns(2)
                     ->schema([
                         Select::make('product_id')
                             ->relationship('product', 'name'),
                         TextInput::make('value')
                             ->label('Jumlah Yang diterima')
                             ->suffix('Kl'),
-                        TextInput::make('note')
                     ]),
-                // Textarea::make('note')
-
+                Forms\Components\TextInput::make('note')
+                    ->maxLength(255)
+                    ->default(null),
             ]);
     }
 
@@ -62,7 +53,7 @@ class ReceivingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('receiving_date')
+                Tables\Columns\TextColumn::make('distribution_date')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('items.product.name')
@@ -71,9 +62,8 @@ class ReceivingResource extends Resource
                     ->listWithLineBreaks()
                     ->suffix(' Kl')
                     ->label('Jumlah'),
-                Tables\Columns\TextColumn::make('items.note')
-                    ->label('Catatan'),
-
+                Tables\Columns\TextColumn::make('note')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -98,19 +88,10 @@ class ReceivingResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListReceivings::route('/'),
-            'create' => Pages\CreateReceiving::route('/create'),
-            'edit' => Pages\EditReceiving::route('/{record}/edit'),
+            'index' => Pages\ManageDistributions::route('/'),
         ];
     }
 }

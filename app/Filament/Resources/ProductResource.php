@@ -28,13 +28,9 @@ class ProductResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255)
-                    ->reactive()
-                    ->debounce(500)
-                    ->afterStateUpdated(
-                        fn(callable $set, $state) => $set('slug', Str::slug($state))
-                    ),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
+                    ->label('symbol')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -47,6 +43,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->label('symbol')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
