@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ReceivingResource\Pages;
 use App\Filament\Resources\ReceivingResource\RelationManagers;
 use App\Models\Receiving;
+use App\Models\Product; // Pastikan import model Product
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -14,23 +15,18 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
 use function Laravel\Prompts\select;
 
 class ReceivingResource extends Resource
 {
     protected static ?string $model = Receiving::class;
-
     protected static ?string $navigationLabel = 'Penerimaan';
-
     protected static ?string $label = 'Penerimaan BBM';
-
     protected static ?string $navigationGroup = 'RSD';
-
     // protected static bool $shouldRegisterNavigation = false;
-
     protected static ?string $navigationIcon = 'heroicon-o-arrow-right-end-on-rectangle';
 
     public static function form(Form $form): Form
@@ -42,19 +38,44 @@ class ReceivingResource extends Resource
                     ->default(now())
                     ->label('Tanggal Penerimaan')
                     ->required(),
-                Repeater::make('items')
+                TableRepeater::make('items')
                     ->relationship('items')
                     ->columns(3)
                     ->schema([
                         Select::make('product_id')
-                            ->relationship('product', 'name'),
+                            ->label('Produk')
+                            ->options(function (callable $get) {
+                                // Ambil semua produk
+                                $allProducts = Product::pluck('name', 'id')->toArray();
+
+                                // Ambil produk yang sudah dipilih di repeater items lain
+                                $selectedProducts = collect($get('../../items'))
+                                    ->pluck('product_id')
+                                    ->filter()
+                                    ->toArray();
+
+                                // Filter produk yang belum dipilih
+                                return collect($allProducts)
+                                    ->reject(function ($name, $id) use ($selectedProducts, $get) {
+                                        // Jangan filter produk yang sedang dipilih di item saat ini
+                                        $currentProductId = $get('product_id');
+                                        return in_array($id, $selectedProducts) && $id != $currentProductId;
+                                    })
+                                    ->toArray();
+                            })
+                            ->reactive() // Membuat select reaktif terhadap perubahan
+                            ->required(),
                         TextInput::make('value')
                             ->label('Jumlah Yang diterima')
-                            ->suffix('Kl'),
+                            ->suffix('Kl')
+                            ->numeric()
+                            ->required(),
                         TextInput::make('note')
-                    ]),
-                // Textarea::make('note')
-
+                            ->label('Catatan')
+                    ])
+                    ->addActionLabel('Tambah Item')
+                    ->reorderableWithButtons()
+                    ->collapsible(),
             ]);
     }
 
@@ -64,16 +85,18 @@ class ReceivingResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('receiving_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Tanggal Penerimaan'),
                 Tables\Columns\TextColumn::make('items.product.name')
-                    ->listWithLineBreaks(),
+                    ->listWithLineBreaks()
+                    ->label('Produk'),
                 Tables\Columns\TextColumn::make('items.value')
                     ->listWithLineBreaks()
                     ->suffix(' Kl')
                     ->label('Jumlah'),
                 Tables\Columns\TextColumn::make('items.note')
+                    ->listWithLineBreaks()
                     ->label('Catatan'),
-
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -89,7 +112,6 @@ class ReceivingResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

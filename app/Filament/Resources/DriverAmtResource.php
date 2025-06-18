@@ -39,10 +39,18 @@ class DriverAmtResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('position')
                     ->required()
+                    ->datalist([
+                        'AMT 1',
+                        'AMT 2'
+                    ])
                     ->maxLength(255),
                 Forms\Components\TextInput::make('note')
                     ->maxLength(255)
                     ->default(null),
+                Forms\Components\TextInput::make('rfid_code')
+                    ->label('RFID')
+                    ->required()
+                    ->unique(ignoreRecord: true),
             ]);
     }
 
@@ -51,15 +59,16 @@ class DriverAmtResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('#')
-                ->rowIndex(),
+                    ->rowIndex(),
                 Tables\Columns\TextColumn::make('nip')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('position')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('note')
+                Tables\Columns\TextColumn::make('rfid_code')
                     ->searchable(),
+    
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

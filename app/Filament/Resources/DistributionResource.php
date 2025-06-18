@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DistributionResource\Pages;
 use App\Filament\Resources\DistributionResource\RelationManagers;
 use App\Models\Distribution;
+use App\Models\Product; // Tambahkan import model Product
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -13,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -24,6 +26,10 @@ class DistributionResource extends Resource
 
     protected static ?string $navigationGroup = 'RSD';
 
+    protected static ?string $navigationLabel = 'Penyaluran';
+
+    protected static ?string $label = 'Penyaluran BBM';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -33,17 +39,44 @@ class DistributionResource extends Resource
                     ->label('Tanggal Penyaluran')
                     ->default(now())
                     ->required(),
-                Repeater::make('items')
+                TableRepeater::make('items')
                     ->relationship('items')
                     ->columns(2)
                     ->schema([
                         Select::make('product_id')
-                            ->relationship('product', 'name'),
+                            ->label('Produk')
+                            ->options(function (callable $get) {
+                                // Ambil semua produk
+                                $allProducts = Product::pluck('name', 'id')->toArray();
+                                
+                                // Ambil produk yang sudah dipilih di repeater items lain
+                                $selectedProducts = collect($get('../../items'))
+                                    ->pluck('product_id')
+                                    ->filter()
+                                    ->toArray();
+                                
+                                // Filter produk yang belum dipilih
+                                return collect($allProducts)
+                                    ->reject(function ($name, $id) use ($selectedProducts, $get) {
+                                        // Jangan filter produk yang sedang dipilih di item saat ini
+                                        $currentProductId = $get('product_id');
+                                        return in_array($id, $selectedProducts) && $id != $currentProductId;
+                                    })
+                                    ->toArray();
+                            })
+                            ->reactive() // Membuat select reaktif terhadap perubahan
+                            ->required(),
                         TextInput::make('value')
-                            ->label('Jumlah Yang diterima')
-                            ->suffix('Kl'),
-                    ]),
+                            ->label('Jumlah Yang Disalurkan')
+                            ->suffix('Kl')
+                            ->numeric()
+                            ->required(),
+                    ])
+                    ->addActionLabel('Tambah Item')
+                    ->reorderableWithButtons()
+                    ->collapsible(),
                 Forms\Components\TextInput::make('note')
+                    ->label('Catatan')
                     ->maxLength(255)
                     ->default(null),
             ]);
@@ -55,15 +88,18 @@ class DistributionResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('distribution_date')
                     ->date()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Tanggal Penyaluran'),
                 Tables\Columns\TextColumn::make('items.product.name')
-                    ->listWithLineBreaks(),
+                    ->listWithLineBreaks()
+                    ->label('Produk'),
                 Tables\Columns\TextColumn::make('items.value')
                     ->listWithLineBreaks()
                     ->suffix(' Kl')
                     ->label('Jumlah'),
                 Tables\Columns\TextColumn::make('note')
-                    ->searchable(),
+                    ->searchable()
+                    ->label('Catatan'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
