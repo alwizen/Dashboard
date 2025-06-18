@@ -26,6 +26,8 @@ class MpsWorkingListResource extends Resource
 
     protected static ?string $navigationLabel = 'Progam Kerja MPS';
 
+    protected static ?string $label = 'Progam Kerja MPS';
+
     protected static ?string $navigationGroup = 'MPS';
 
     public static function form(Form $form): Form
@@ -57,7 +59,7 @@ class MpsWorkingListResource extends Resource
                         'completed' => 'Completed',
                         'on_hold' => 'On Hold',
                     ])
-                    ->default('pending')
+                    ->default('in_progress')
                     ->required(),
                 Forms\Components\DatePicker::make('start_date'),
                 Forms\Components\DatePicker::make('due_date'),
@@ -125,18 +127,18 @@ class MpsWorkingListResource extends Resource
             ])
             ->actions([
                 RelationManagerAction::make('mpsHistory')
-                        ->label('')
-                        ->relationManager(ProgressHistoriesRelationManager::make())
-                        ->icon('heroicon-o-paper-clip')
-                        ->color('warning')
-                        ->tooltip('Riwayat Pekerjaan'),
-                        
+                    ->label('')
+                    ->relationManager(ProgressHistoriesRelationManager::make())
+                    ->icon('heroicon-o-paper-clip')
+                    ->color('warning')
+                    ->tooltip('Riwayat Pekerjaan'),
+
                 ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\ViewAction::make()
                 ])
-                ->tooltip('Aksi')
+                    ->tooltip('Aksi')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

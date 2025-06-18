@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\BillFleet;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Tables;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
@@ -10,6 +11,8 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class BillFleetTableWidget extends BaseWidget
 {
+    use HasWidgetShield;
+    
     protected int | string | array $columnSpan = 'full';
 
     protected static ?string $heading = 'Tagihan Fleet';

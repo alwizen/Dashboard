@@ -7,6 +7,8 @@ use App\Filament\Widgets\Cctv;
 use App\Filament\Widgets\WeatherToday;
 use App\Models\User;
 use App\Settings\KaidoSetting;
+use Awcodes\LightSwitch\Enums\Alignment;
+use Awcodes\LightSwitch\LightSwitchPlugin;
 use Filament\Http\Middleware\Authenticate;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
@@ -34,7 +36,10 @@ use Rupadana\ApiService\ApiServicePlugin;
 use Laravel\Socialite\Contracts\User as SocialiteUserContract;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Schema;
+use pxlrbt\FilamentSpotlight\SpotlightPlugin;
 use Swis\Filament\Backgrounds\FilamentBackgroundsPlugin;
+use Swis\Filament\Backgrounds\ImageProviders\MyImages;
+use Swis\Filament\Backgrounds\ImageProviders\Triangles;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -61,7 +66,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('')
             ->favicon(asset('images/fav.png'))
             ->brandLogo(asset('images/light.png'))
-            ->brandLogoHeight('3.5rem')
+            ->brandLogoHeight('4rem')
             ->darkModeBrandLogo(asset('images/dark.png'))
             ->when($this->settings->login_enabled ?? true, fn($panel) => $panel->login(Login::class))
             // ->when($this->settings->registration_enabled ?? true, fn($panel) => $panel->registration())
@@ -74,6 +79,9 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
+            ])
+            ->resources([
+                config('filament-logger.activity_resource')
             ])
             ->navigationGroups([
                 'MPS',
@@ -116,7 +124,15 @@ class AdminPanelProvider extends PanelProvider
     private function getPlugins(): array
     {
         $plugins = [
-            FilamentBackgroundsPlugin::make(),
+            // SpotlightPlugin::make(),
+            LightSwitchPlugin::make()
+                ->position(Alignment::TopRight),
+            FilamentBackgroundsPlugin::make()
+                ->showAttribution(false)
+                ->imageProvider(
+                    MyImages::make()
+                        ->directory('images/pertamina')
+                ),
             ThemesPlugin::make(),
             FilamentShieldPlugin::make(),
             ApiServicePlugin::make(),

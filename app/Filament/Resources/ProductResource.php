@@ -31,7 +31,8 @@ class ProductResource extends Resource
                     ->maxLength(255)
                     ->reactive()
                     ->debounce(500)
-                    ->afterStateUpdated(fn(callable $set, $state) => $set('slug', Str::slug($state))
+                    ->afterStateUpdated(
+                        fn(callable $set, $state) => $set('slug', Str::slug($state))
                     ),
                 Forms\Components\TextInput::make('slug')
                     ->required()
@@ -61,7 +62,6 @@ class ProductResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\DeleteAction::make(),
 
             ])

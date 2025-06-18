@@ -117,7 +117,8 @@ class TankerResource extends Resource
             ->defaultPaginationPageOption(50)
             ->columns([
                 Tables\Columns\TextColumn::make('nopol')
-                    ->searchable(),
+                    ->searchable()
+                    ->copyable(),
                 Tables\Columns\TextColumn::make('transportir.name')
                     ->label('Transportir')
                     ->searchable(),

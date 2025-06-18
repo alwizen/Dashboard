@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Hugomyb\FilamentMediaAction\Tables\Actions\MediaAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -25,7 +26,7 @@ class DailySampleResource extends Resource
 
     protected static ?string $navigationLabel = 'Harian Retain Sample';
 
-    protected static ?string $label = 'Laporan Harian Retain Sample';    
+    protected static ?string $label = 'Laporan Harian Retain Sample';
 
     public static function form(Form $form): Form
     {
@@ -40,6 +41,8 @@ class DailySampleResource extends Resource
                         Forms\Components\FileUpload::make('photo')
                             ->label('Sample Photo')
                             ->image()
+                            ->optimize('webp')
+                            ->resize(50)
                             ->required()
                             ->disk('public')
                             ->directory('daily_samples')
@@ -115,7 +118,7 @@ class DailySampleResource extends Resource
                     ->label('Water Volume (L)')
                     ->listWithLineBreaks()
                     ->toggleable(isToggledHiddenByDefault: true),
-            
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

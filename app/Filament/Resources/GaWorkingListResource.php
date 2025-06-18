@@ -63,7 +63,7 @@ class GaWorkingListResource extends Resource
                         'completed' => 'Completed',
                         'on_hold' => 'On Hold',
                     ])
-                    ->default('pending')
+                    ->default('in_progress')
                     ->required(),
             ]);
     }
