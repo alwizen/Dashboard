@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\DistributionItem;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Carbon;
 
 class TodayDistributionStat extends BaseWidget
 {
@@ -16,18 +17,26 @@ class TodayDistributionStat extends BaseWidget
 
     protected function getStats(): array
     {
-        $items = DistributionItem::with('product')->get();
+        $items = DistributionItem::with('product')
+            ->whereDate('created_at', Carbon::today())
+            ->get();
 
-        // Kelompokkan berdasarkan produk dan jumlahkan value-nya
-        $grouped = $items->groupBy('product.name')->map(function ($items) {
-            return $items->sum('value');
-        });
+        $grouped = $items->groupBy('product.name')->map(fn ($items) => $items->sum('value'));
+        $totalAll = $grouped->sum();
 
-        // Buat array Stat untuk masing-masing produk
-        $stats = [];
+        $stats = [
+            Stat::make('Total Penyaluran', number_format($totalAll, 2) . ' Kl')
+                ->description('Jumlah keseluruhan hari ini')
+                ->icon('heroicon-o-chart-bar')
+                ->color('primary'),
+        ];
 
+        // Tambahkan per produk
         foreach ($grouped as $product => $total) {
-            $stats[] = Stat::make($product, number_format($total, 2) . ' Kl');
+            $stats[] = Stat::make($product, number_format($total, 2) . ' Kl')
+                ->description('Penyaluran produk ' . $product)
+                ->icon('heroicon-o-cube') // ganti sesuai ikon produk kalau perlu
+                ->color('success'); // atau bisa dibuat dinamis berdasarkan produk
         }
 
         return $stats;
